@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Scraper UI</title>
+</head>
+<body>
+    <h1>Product Scraper Dashboard</h1>
+
+    <button onclick="startScraping()">Start Scraping</button>
+    <button onclick="loadProducts()">View Products</button>
+
+    <h2>Output:</h2>
+    <pre id="output"></pre>
+
+    <input id="scrapeUrl" placeholder="Enter product URL" />
+
+    <button onclick="scrapeProduct()">Scrape Product</button>
+    <h2>Output:</h2>
+    <pre id="output"></pre>
+
+
+    <script>
+        async function startScraping() {
+            const res = await fetch("http://127.0.0.1:8000/scrape", {
+                method: "POST"
+            });
+            const data = await res.json();
+            document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function loadProducts() {
+            const res = await fetch("http://127.0.0.1:8000/products");
+            const data = await res.json();
+            document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+        }
+    
+        async function scrapeProduct() {
+            const url = document.getElementById("scrapeUrl").value;
+
+            const response = await fetch("http://127.0.0.1:8000/scrape_custom", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ urls: [url] })
+
+        });
+
+            const data = await response.json();
+            document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+
+            }
+    </script>
+
+</body>
+</html>
